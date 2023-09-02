@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+    <menuitem
+        id="haus_fleet_management"
+        name="Haus Fleet Management"
+        sequence="0"
+    />
+
+    <menuitem
+        id="haus_fleet_management_task"
+        name="Task"
+        parent="haus_fleet_management"
+        sequence="1"
+    />
+    
+</odoo>
