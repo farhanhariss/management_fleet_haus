@@ -19,7 +19,7 @@
         id="haus_fleet_management_schedule"
         name="Schedule"
         parent="haus_fleet_management"
-        action="action_create_schedule"
+        action="action_schedule_task"
         sequence="2"
     />
     

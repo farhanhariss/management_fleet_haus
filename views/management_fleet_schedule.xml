@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+
+    <record id="action_schedule_task" model="ir.actions.act_window">
+        <field name="name">Schedule Task</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">schedules.task</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+
+            <div>
+                <p class="o_view_nocontent_smiling_face">
+                    Schedule New ScheduleTask
+                </p>
+                <p>
+                    Records Count: <t t-esc="record_count" />
+                </p>
+            </div>
+
+        </field>
+    </record>
+
+    <record id="view_schedule_task_form" model="ir.ui.view">
+        <field name="name">schedule.task.form</field>
+        <field name="model">schedules.task</field>
+        <field name="arch" type="xml">
+            <form string="Schedule Task">
+                <sheet>
+
+                    <!-- Coba tambahin di atasnya aja kalo emang nanti ga bisa -->
+                    <group class="col">
+                        <field name="task_flow" />
+                        <field name="customer_name" />
+                        <field name="customer_address" />
+                        <field name="assign_to" />
+                        <field name="repeat_every" />
+                    </group>
+
+                    <group class="col">
+                        <group attrs="{'invisible': [('repeat_every','!=','day')]}">
+                            <field name="active_from" />
+                            <field name="active_to" />
+                            <field name="hour_selection" />
+                        </group>
+
+                        <group attrs="{'invisible': [('repeat_every','!=','week')]}">
+                            <field name="active_from" />
+                            <field name="active_to" />
+                            <field name="days_selection" />
+                            <field name="hour_selection" />
+                        </group>
+
+                        <group attrs="{'invisible': [('repeat_every','!=','month')]}">
+                            <field name="active_from" />
+                            <field name="active_to" />
+                            <field name="days_selection" />
+                            <field name="hour_selection" />
+                        </group>
+
+                        <group attrs="{'invisible': [('repeat_every','!=','by date')]}">
+                            <field name="date_selection" />
+                        </group>
+
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

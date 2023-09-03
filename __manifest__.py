@@ -11,6 +11,8 @@
     'depends':['mail'],#untuk modul yang di butuhkan
     'data':[ 
         'views/management_fleet_task.xml',
+        'views/management_fleet_schedule.xml',
+        'views/management_fleet_dashboard.xml',
         'views/menu.xml',
         'security/ir.model.access.csv',
     ],#untuk xml
