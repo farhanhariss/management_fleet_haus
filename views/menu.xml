@@ -7,6 +7,14 @@
         sequence="0"
     />
 
+    <menuitem 
+        id="haus_fleet_management_dashboard"
+        name="Dashboard"
+        parent="haus_fleet_management"
+        action="action_dashboard"
+        sequence="0"
+    />
+
     <menuitem
         id="haus_fleet_management_task"
         name="Task"

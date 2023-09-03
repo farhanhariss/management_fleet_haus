@@ -8,7 +8,7 @@
     'category':'Productivity',
     'website':'',
     'license': 'LGPL-3',
-    'depends':['mail'],#untuk modul yang di butuhkan
+    'depends':['mail','board'],#untuk modul yang di butuhkan
     'data':[ 
         'views/management_fleet_task.xml',
         'views/management_fleet_schedule.xml',
