@@ -42,9 +42,18 @@ class CreateTask(models.Model):
             ("failed", "Failed"),
         ]
     )
+    
+    action = fields.Char(string="Action", compute="_compute_action")
 
-    # record_task_count = fields.Integer(compute='_compute_task_count', string='Total Tasks:')
-
+    @api.depends('task_status')  # Gunakan field yang sesuai
+    def _compute_action(self):
+        for record in self:
+            # Logika untuk menentukan apakah tombol harus ditampilkan atau tidak
+            if record.task_status == 'ongoing':
+                record.action = "Do Task"  # Label tombol
+            else:
+                record.action = False  # Tidak menampilkan tombol jika tidak memenuhi syarat
+    
     # validation date
     @api.constrains("start_time", "end_time")
     def check_date_and_duedate_valid(self):
@@ -70,11 +79,4 @@ class CreateTask(models.Model):
                 record.task_status = "done"
             else:
                 record.task_status = "failed"
-
-    # def _compute_task_count(self):
-    #     for record in self:
-    #         record.task_count = self.env['create.task'].search_count([('task_flow', '=', record.task_flow)])
-
-
-# count records in create task
-# record_count= self.env['create.task'].search_count([])
+                

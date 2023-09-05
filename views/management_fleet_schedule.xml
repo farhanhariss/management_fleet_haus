@@ -34,6 +34,7 @@
                         <field name="task_flow" />
                         <field name="customer_name" />
                         <field name="customer_address" />
+                        <field name="schedule_name"/>
                         <field name="assign_to" />
                         <field name="repeat_every" />
                     </group>
@@ -68,4 +69,17 @@
             </form>
         </field>
     </record>
+
+    <record id="view_schedule_tree" model="ir.ui.view">
+        <field name="name">haus.schedule.tree</field>
+        <field name="model">schedules.task</field>
+        <field name="arch" type="xml">
+            <tree string="Task">
+                <field name="task_flow" />
+                <field name="schedule_name" />
+                <field name="last_status" />
+            </tree>
+        </field>
+    </record>
+
 </odoo>
