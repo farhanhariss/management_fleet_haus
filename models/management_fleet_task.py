@@ -44,16 +44,17 @@ class CreateTask(models.Model):
         #  compute="_compute_task_status" # error nanti dia bakal overload servernya
     )
     
-    action = fields.Char(string="Action", compute="_compute_action")
+    action = fields.Char(string="Action")
+    # action = fields.Char(string="Action", compute="_compute_action")
 
-    @api.depends('task_status')  # Gunakan field yang sesuai
-    def _compute_action(self):
-        for record in self:
-            # Logika untuk menentukan apakah tombol harus ditampilkan atau tidak
-            if record.task_status == 'ongoing':
-                record.action = "Do Task"  # Label tombol
-            else:
-                record.action = False  # Tidak menampilkan tombol jika tidak memenuhi syarat
+    # # @api.depends('task_status')  # Gunakan field yang sesuai
+    # def _compute_action(self):
+    #     for record in self:
+    #         # Logika untuk menentukan apakah tombol harus ditampilkan atau tidak
+    #         if record.task_status == 'ongoing':
+    #             record.action = "Do Task"  # Label tombol
+    #         else:
+    #             record.action = False  # Tidak menampilkan tombol jika tidak memenuhi syarat
     
     # validation date
     @api.constrains("start_time", "end_time")
@@ -62,32 +63,34 @@ class CreateTask(models.Model):
             if record.start_time > record.end_time:
                 raise ValueError("Due date must be greater than date")
 
-    # validation status
-    @api.constrains("assign_to, start_time, end_time")
-    def check_task_status(self):
-        for record in self:
-            if not record.assign_to and (
-                record.start_time < record.end_time
-                or record.start_time <= fields.Datetime.now() <= record.end_time
-            ):
-                record.task_status = 'unassigned'
-            elif (
-                record.assign_to
-                and record.start_time <= fields.Datetime.now() <= record.end_time
-            ):
-                record.task_status = 'ongoing'
-            elif record.assign_to and record.end_time < fields.Datetime.now():
-                record.task_status = 'done'
-            else:
-                record.task_status = 'failed'
-    
     @api.constrains('start_time', 'end_time')
     def _compute_task_status(self):
         for task in self:
             current_datetime = fields.Datetime.now()
             if task.start_time <= current_datetime <= task.end_time:
                 task.task_status = 'ongoing'
+                task.action = "Do Task"
             elif current_datetime > task.end_time:
                 task.task_status = 'done'
             else:
                 task.task_status = 'unassigned'
+                
+    # validation status
+    # @api.constrains("assign_to, start_time, end_time")
+    # def check_task_status(self):
+    #     for record in self:
+    #         if not record.assign_to and (
+    #             record.start_time < record.end_time
+    #             or record.start_time <= fields.Datetime.now() <= record.end_time
+    #         ):
+    #             record.task_status = 'unassigned'
+    #         elif (
+    #             record.assign_to
+    #             and record.start_time <= fields.Datetime.now() <= record.end_time
+    #         ):
+    #             record.task_status = 'ongoing'
+    #         elif record.assign_to and record.end_time < fields.Datetime.now():
+    #             record.task_status = 'done'
+    #         else:
+    #             record.task_status = 'failed'
+    
