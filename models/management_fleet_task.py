@@ -10,10 +10,10 @@ class CreateTask(models.Model):
     # declare field
     task_flow = fields.Selection(
         [
-            ("field canvassing", "Field Canvassing"),
-            ("field sales", "Field Sales"),
-            ("home cleaning", "Home Cleaning"),
-            ("delivery", "Delivery"),
+            ('field canvassing', 'Field Canvassing'),
+            ('field sales', 'Field Sales'),
+            ('home cleaning', 'Home Cleaning'),
+            ('delivery', 'Delivery'),
         ],
         string="Flow",
         required=True,
@@ -22,11 +22,11 @@ class CreateTask(models.Model):
     customer_address = fields.Char(strings="Customer Address", required=True)
     assign_to = fields.Selection(
         [
-            ("farhan haris", "Farhan Haris"),
-            ("nurul fajri", "Nurul Fajri"),
-            ("dian", "Dian"),
-            ("rifqi zaidan", "Rifqi Zaidan"),
-            ("rizal zeri", "Rizal Zeri"),
+            ('farhan haris', 'Farhan Haris'),
+            ('nurul fajri', 'Nurul Fajri'),
+            ('dian', 'Dian'),
+            ('rifqi zaidan', 'Rifqi Zaidan'),
+            ('rizal zeri', 'Rizal Zeri'),
         ],
         string="Assign To",
     )
@@ -36,11 +36,12 @@ class CreateTask(models.Model):
 
     task_status = fields.Selection(
         [
-            ("unassigned", "Unassigned"),
-            ("ongoing", "Ongoing"),
-            ("done", "Done"),
-            ("failed", "Failed"),
+            ('unassigned', 'Unassigned'),
+            ('ongoing', 'Ongoing'),
+            ('done', 'Done'),
+            ('failed', 'Failed'),
         ]
+        #  compute="_compute_task_status" # error nanti dia bakal overload servernya
     )
     
     action = fields.Char(string="Action", compute="_compute_action")
@@ -69,14 +70,24 @@ class CreateTask(models.Model):
                 record.start_time < record.end_time
                 or record.start_time <= fields.Datetime.now() <= record.end_time
             ):
-                record.task_status = "unassigned"
+                record.task_status = 'unassigned'
             elif (
                 record.assign_to
                 and record.start_time <= fields.Datetime.now() <= record.end_time
             ):
-                record.task_status = "ongoing"
+                record.task_status = 'ongoing'
             elif record.assign_to and record.end_time < fields.Datetime.now():
-                record.task_status = "done"
+                record.task_status = 'done'
             else:
-                record.task_status = "failed"
-                
+                record.task_status = 'failed'
+    
+    @api.constrains('start_time', 'end_time')
+    def _compute_task_status(self):
+        for task in self:
+            current_datetime = fields.Datetime.now()
+            if task.start_time <= current_datetime <= task.end_time:
+                task.task_status = 'ongoing'
+            elif current_datetime > task.end_time:
+                task.task_status = 'done'
+            else:
+                task.task_status = 'unassigned'

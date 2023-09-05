@@ -1,3 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_create_task,access.create.task,model_create_task,,1,1,1,1
 access_schedules_task,access.schedules.task,model_schedules_task,,1,1,1,1
+access_task_status_updater,access.task.status.updater,model_task_status_updater,,1,1,1,1
