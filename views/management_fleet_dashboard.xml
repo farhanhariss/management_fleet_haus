@@ -6,8 +6,16 @@
         <field name="name">Task Graph</field>
         <field name="res_model">create.task</field>
         <field name="view_mode">graph</field>
-        <field name="view_id" ref="odoo_fleet_management.graph_task"/>
+        <field name="view_id" ref="odoo_fleet_management.graph_task" />
     </record>
+
+    <record id="action_graph_bar_view" model="ir.actions.act_window">
+        <field name="name">Task Graph</field>
+        <field name="res_model">create.task</field>
+        <field name="view_mode">graph</field>
+        <field name="view_id" ref="odoo_fleet_management.graph_bar_task" />
+    </record>
+
 
     <record id="task_dashboard_view" model="ir.ui.view">
         <field name="name">Dashboard Form</field>
@@ -16,12 +24,15 @@
         <field name="arch" type="xml">
             <form string="Task Dashboard">
                 <board style="1-2">
-                    <column>
+                    <!-- <column>
                         <action name="%(odoo_fleet_management.action_create_task)d"
                             string="Create Task" />
+                    </column> -->
+                    <column>
+                        <action string="Task Activity" name="%(action_graph_bar_view)d" />
                     </column>
                     <column>
-                        <action string="Graph View" name="%(action_graph_view)d"/>
+                        <action string="Task by Status" name="%(action_graph_view)d" />
                     </column>
                 </board>
             </form>
