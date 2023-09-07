@@ -64,6 +64,8 @@
                             <field name="date_selection" />
                         </group>
 
+                        <!-- <button name="create_tasks_from_schedule" string="Create Tasks" type="object" class="oe_highlight" /> -->
+
                     </group>
                 </sheet>
             </form>

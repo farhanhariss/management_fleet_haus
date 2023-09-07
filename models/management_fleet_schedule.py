@@ -1,4 +1,5 @@
 from odoo import models, fields, api
+from datetime import datetime, timedelta
 
 
 class ScheduleTask(models.Model):
@@ -57,7 +58,38 @@ class ScheduleTask(models.Model):
         ],
         string="Days",
     )
-    hour_selection = fields.Datetime(string="Hour", widget="time")
+    # hour_selection = fields.Datetime(string="Hour", widget="time")
+    
+    hour_selection = fields.Selection(
+        [
+            ('00:00', '00:00'),
+            ('01:00', '01:00'),
+            ('02:00', '02:00'),
+            ('03:00', '03:00'),
+            ('04:00', '04:00'),
+            ('05:00', '05:00'),
+            ('06:00', '06:00'),
+            ('07:00', '07:00'),
+            ('08:00', '08:00'),
+            ('09:00', '09:00'),
+            ('10:00', '10:00'),
+            ('11:00', '11:00'),
+            ('12:00', '12:00'),
+            ('13:00', '13:00'),
+            ('14:00', '14:00'),
+            ('15:00', '15:00'),
+            ('16:00', '16:00'),
+            ('17:00', '17:00'),
+            ('18:00', '18:00'),
+            ('19:00', '19:00'),
+            ('20:00', '20:00'),
+            ('21:00', '21:00'),
+            ('22:00', '22:00'),
+            ('23:00', '23:00'),
+        ],
+        string="Hour",
+        required=True,
+    )
 
     # validation active
     @api.constrains("active_from", "active_to")
@@ -65,31 +97,75 @@ class ScheduleTask(models.Model):
         for record in self:
             if record.active_from > record.active_to:
                 raise ValueError("Due date must be greater than date")
+            
+    #TODO : Do the scheduling in cron
+    # @api.model
+    # def create_tasks_from_schedule(self):
+    #     task_obj = self.env['create.task']
 
-    # # create scheduled task
-    # def create_scheduled_task(self):
-    #     vals = {
-    #         "customer_name": self.customer_name,
-    #         "customer_address": self.customer_address,
-    #         "assign_to": self.assign_to,
-    #         # 'start_time': self.active_from,
-    #         # 'end_time': self.active_to,
-    #     }
+    #     for schedule in self:
+    #         if schedule.repeat_every == 'day':
+    #             # logika untuk jadwal harian
+    #             # mengulang tugas setiap hari pada rentang waktu tertentu
+    #             current_time = schedule.active_from
+    #             while current_time <= schedule.active_to:
+    #                 current_hour = datetime.now().strftime('%H:%M')
+    #                 if current_hour == schedule.hour_selection:
+    #                     task_obj.create({
+    #                         'task_flow': schedule.task_flow,
+    #                         'customer_name': schedule.customer_name,
+    #                         'customer_address': schedule.customer_address,
+    #                         'assign_to': schedule.assign_to,
+    #                         'start_time': current_time,
+    #                         'end_time': current_time + timedelta(hours=1),  # Sesuaikan durasi tugas
+    #                     })
+    #                 current_time += timedelta(days=1)  # Tambahkan 1 hari ke waktu saat ini
 
-    #     # Check the selected value of the 'repeat_every' field
+    #         elif schedule.repeat_every == 'week':
+    #             # logika untuk jadwal mingguan
+    #             # mengulang tugas pada hari-hari tertentu dalam seminggu
+    #             current_time = schedule.active_from
+    #             while current_time <= schedule.active_to:
+    #                 if current_time.strftime('%A').lower() == schedule.days_selection:
+    #                     current_hour = datetime.now().strftime('%H:%M')
+    #                     if current_hour == schedule.hour_selection:
+    #                         task_obj.create({
+    #                             'task_flow': schedule.task_flow,
+    #                             'customer_name': schedule.customer_name,
+    #                             'customer_address': schedule.customer_address,
+    #                             'assign_to': schedule.assign_to,
+    #                             'start_time': current_time,
+    #                             'end_time': current_time + timedelta(hours=1),  # Sesuaikan durasi tugas
+    #                         })
+    #                 current_time += timedelta(days=1)  # Tambahkan 1 hari ke waktu saat ini
 
-    #     if self.repeat_every == "day":
-    #         # Set the 'hour_selection' field
-    #         vals["hour_selection"] = self.hour_selection
-    #     elif self.repeat_every == "week":
-    #         # Set the 'active_from', 'active_to', and 'hour_selection' fields
-    #         vals["active_from"] = self.active_from
-    #         vals["active_to"] = self.active_to
-    #         vals["hour_selection"] = self.hour_selection
-    #     elif self.repeat_every == "month":
-    #         # Set the 'active_from', 'active_to', and 'hour_selection' fields
-    #         vals["active_from"] = self.active_from
-    #         vals["active_to"] = self.active_to
-    #         vals["hour_selection"] = self.hour_selection
+    #         elif schedule.repeat_every == 'month':
+    #             # logika untuk jadwal bulanan
+    #             # mengulang tugas pada tanggal-tanggal tertentu dalam sebulan
+    #             current_time = schedule.active_from
+    #             while current_time <= schedule.active_to:
+    #                 if current_time.day == schedule.date_selection.day:
+    #                     current_hour = datetime.now().strftime('%H:%M')
+    #                     if current_hour == schedule.hour_selection:
+    #                         task_obj.create({
+    #                             'task_flow': schedule.task_flow,
+    #                             'customer_name': schedule.customer_name,
+    #                             'customer_address': schedule.customer_address,
+    #                             'assign_to': schedule.assign_to,
+    #                             'start_time': current_time,
+    #                             'end_time': current_time + timedelta(hours=1),  # Sesuaikan durasi tugas
+    #                         })
+    #                 current_time += timedelta(days=1)  # Tambahkan 1 hari ke waktu saat ini
 
-    #     self.env["create.task"].create(vals)
+    #         elif schedule.repeat_every == 'by_date':
+    #             # untuk jadwal berdasarkan tanggal tertentu
+    #             # membuat tugas pada tanggal tertentu
+    #             task_obj.create({
+    #                 'task_flow': schedule.task_flow,
+    #                 'customer_name': schedule.customer_name,
+    #                 'customer_address': schedule.customer_address,
+    #                 'assign_to': schedule.assign_to,
+    #                 'start_time': schedule.date_selection,
+    #                 'end_time': schedule.date_selection + timedelta(hours=1),  # Sesuaikan durasi tugas
+    #             })
+                
