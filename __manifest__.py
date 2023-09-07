@@ -13,6 +13,7 @@
         'views/management_fleet_task.xml',
         'views/management_fleet_schedule.xml',
         'views/management_fleet_dashboard.xml',
+        'data/cron_task_schedule.xml',
         'views/menu.xml',
         'security/ir.model.access.csv',
     ],#untuk xml

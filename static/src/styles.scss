@@ -1,0 +1,23 @@
+/* Grey for Unassigned */
+.task-status-grey {
+    background-color: grey;
+    color: white; /* You can adjust text color as needed */
+}
+
+/* Yellow for Ongoing */
+.task-status-yellow {
+    background-color: yellow;
+    color: black; /* You can adjust text color as needed */
+}
+
+/* Green for Done */
+.task-status-green {
+    background-color: green;
+    color: white; /* You can adjust text color as needed */
+}
+
+/* Red for Failed */
+.task-status-red {
+    background-color: red;
+    color: white; /* You can adjust text color as needed */
+}

@@ -1,4 +1,5 @@
 from odoo import models, fields, api
+from odoo.exceptions import ValidationError
 
 # from management_fleet_schedule import ScheduleTask
 
@@ -41,7 +42,6 @@ class CreateTask(models.Model):
             ('done', 'Done'),
             ('failed', 'Failed'),
         ]
-        #  compute="_compute_task_status" # error nanti dia bakal overload servernya
     )
     
     action = fields.Char(string="Action")
@@ -63,34 +63,40 @@ class CreateTask(models.Model):
             if record.start_time > record.end_time:
                 raise ValueError("Due date must be greater than date")
 
-    @api.constrains('start_time', 'end_time')
-    def _compute_task_status(self):
-        for task in self:
-            current_datetime = fields.Datetime.now()
-            if task.start_time <= current_datetime <= task.end_time:
-                task.task_status = 'ongoing'
-                task.action = "Do Task"
-            elif current_datetime > task.end_time:
-                task.task_status = 'done'
-            else:
-                task.task_status = 'unassigned'
+    @api.model
+    def compute_task_status(self):
+
+        #Inisialisasi waktu saat ini
+        current_time = fields.Datetime.now()
+        
+        # Update status tugas dari "Unassigned" ke "Ongoing"
+        tasks_to_update_ongoing = self.search([('start_time', '<=', current_time), ('task_status', '=', 'unassigned')])
+        tasks_to_update_ongoing.write({'task_status': 'ongoing'})
+        
+        # Update status tugas dari "Ongoing" ke "Done"
+        tasks_to_update_done = self.search([('end_time', '<=', current_time), ('task_status', '=', 'ongoing')])
+        tasks_to_update_done.write({'task_status': 'done'})
                 
-    # validation status
-    # @api.constrains("assign_to, start_time, end_time")
-    # def check_task_status(self):
-    #     for record in self:
-    #         if not record.assign_to and (
-    #             record.start_time < record.end_time
-    #             or record.start_time <= fields.Datetime.now() <= record.end_time
-    #         ):
-    #             record.task_status = 'unassigned'
-    #         elif (
-    #             record.assign_to
-    #             and record.start_time <= fields.Datetime.now() <= record.end_time
-    #         ):
-    #             record.task_status = 'ongoing'
-    #         elif record.assign_to and record.end_time < fields.Datetime.now():
-    #             record.task_status = 'done'
-    #         else:
-    #             record.task_status = 'failed'
-    
+
+    @api.constrains('assign_to', 'task_status', 'start_time', 'end_time')
+    def _check_task_status(self):
+        current_time = fields.Datetime.now()
+        for task in self:
+            if not task.assign_to and not task.task_status and current_time < task.start_time:
+                task.task_status = 'unassigned'
+            elif not task.task_status and task.start_time <= current_time <= task.end_time and (task.assign_to or not task.assign_to):
+                task.task_status = 'ongoing'
+            elif task.assign_to and not task.task_status and current_time > task.end_time:
+                raise ValidationError("Cannot create a record with assignee and no status beyond end time.")
+            
+        if task.assign_to and task.task_status and task.start_time <= current_time <= task.end_time:
+            if task.task_status != 'ongoing':
+                task.task_status = 'ongoing'
+        elif task.assign_to and task.task_status and current_time > task.end_time:
+            raise ValidationError("Cannot create a record with assignee and status beyond end time.")
+        
+    @api.model
+    def show_success_prompt(self):
+        # Display a success prompt
+        for record in self:
+            record.env.user.notify_success("This is a success message.")
