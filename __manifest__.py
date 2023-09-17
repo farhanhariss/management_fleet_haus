@@ -17,6 +17,11 @@
         'views/menu.xml',
         'security/ir.model.access.csv',
     ],#untuk xml
+    'assets':{
+        'web.assets_backend':[
+            'odoo_fleet_management/static/src/js/pin_point.js',
+        ]
+    },
     'demo':[], #untuk data demo
     'qweb':[],
     'installable':True, #untuk bisa di install

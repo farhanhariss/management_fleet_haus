@@ -18,8 +18,7 @@
         </field>
     </record>
 
-    <!--Create
-    Task Form-->
+    <!-- Create Task Form -->
     <record id="view_create_task_form" model="ir.ui.view">
         <field name="name">create.task.form</field>
         <field name="model">create.task</field>
@@ -27,18 +26,30 @@
             <form string="Create Task">
                 <sheet>
                     <group>
-                        <field name="task_flow" align="center"/>
-                        <field name="customer_name" align="center"/>
-                        <field name="customer_address" align="center"/>
-                        <field name="assign_to" align="center"/>
+                        <field name="task_flow" align="center" />
+                        <field name="customer_name" align="center" />
+                        <field name="customer_address" align="center" />
+                        <field name="assign_to" align="center" />
                         <field name="task_status" align="center" />
-                        <field name="start_time" align="center"/>
-                        <field name="end_time" align="center"/>
+                        <field name="start_time" align="center" />
+                        <field name="end_time" align="center" />
+                        <!-- <field name="maps_link" widget="iframe" options="{'disable_link': True}" t-attf-src="record.google_maps_url"/> -->
+                         <!-- Set invisible="1" to make lat and lon fields visible -->
+                        <field name="lat" invisible="1" />
+                        <field name="lon" invisible="1" />
                     </group>
                 </sheet>
             </form>
+            <div>
+                <!-- Set the map link dynamically using t-attf-src -->
+                <iframe width="100%" height="300" frameborder="0" scrolling="no" marginheight="0"
+                    marginwidth="0"
+                    src="https://maps.google.com/maps?q=-7.057785,110.429039&amp;z=15&amp;output=embed&amp;key=AIzaSyBbR235E758eQZ09yh85k-KIFr4s0P6zyM">
+                </iframe>
+            </div>
         </field>
     </record>
+
 
     <!--Task
     View Tree-->
@@ -47,14 +58,17 @@
         <field name="model">create.task</field>
         <field name="arch" type="xml">
             <tree string="Task">
-                <field name="task_flow" align="center"/>
-                <field name="customer_name" align="center"/>
-                <field name="assign_to" align="center"/>
-                <field name="task_status" align="center"/>
-                <field name="start_time" align="center"/>
-                <field name="end_time" align="center"/>
-                <button name="show_success_prompt" string="Do Task" type="object" class="oe_highlight " align="center"
-                    attrs="{'invisible': [('task_status', '!=', 'ongoing')]}"/>
+                <field name="task_flow" align="center" />
+                <field name="customer_name" align="center" />
+                <field name="assign_to" align="center" />
+                <field name="task_status" align="center" />
+                <field name="start_time" align="center" />
+                <field name="end_time" align="center" />
+                <field name="lat" />
+                <field name="lon" />
+                <button name="show_success_prompt" string="Do Task" type="object"
+                    class="oe_highlight " align="center"
+                    attrs="{'invisible': [('task_status', '!=', 'ongoing')]}" />
             </tree>
         </field>
     </record>
@@ -76,8 +90,8 @@
         <field name="type">graph</field>
         <field name="arch" type="xml">
             <graph string="Task Bar Chart Graph">
-                <field name="task_flow" type="bar"/>
-                <field name="start_time" type="row"/>
+                <field name="task_flow" type="bar" />
+                <field name="start_time" type="row" />
             </graph>
         </field>
     </record>
