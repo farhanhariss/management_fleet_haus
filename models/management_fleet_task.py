@@ -69,6 +69,53 @@ class CreateTask(models.Model):
     #         else:
     #             record.maps_link = ''
     
+    def get_google_maps_url(self, lat, lon):
+        api_key = 'AIzaSyD-9tSrke72PouQMnMX-a7eZSW0jkFMBWY'
+        return f'https://www.google.com/maps/embed/v1/place?key={api_key}&q={lat},{lon}'
+    
+    # Fungsi aksi untuk membuka pop-up Google Maps
+    def action_open_google_maps(self):
+        # Pastikan latitude dan longitude tersedia
+        if self.lat1 and self.lon1:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'open_google_maps_popup',
+                'params': {
+                    'lat': self.lat1,
+                    'lon': self.lon1,
+                },
+            }
+        else:
+            # Latitude dan longitude tidak tersedia, berikan pesan kesalahan
+            raise ValidationError("Latitude and Longitude are not available.")
+    
+     # Fungsi aksi untuk memperbarui koordinat
+    # def action_update_coordinates(self):
+    #     for record in self:
+    #         # Di sini Anda dapat mengambil latitude dan longitude yang baru dari elemen peta (misalnya, menggunakan JavaScript Google Maps API).
+    #         # Gantilah kode berikut dengan cara yang sesuai untuk mendapatkan koordinat yang baru.
+    #         new_latitude = 123.456  # Gantilah dengan nilai latitude yang benar
+    #         new_longitude = 789.012  # Gantilah dengan nilai longitude yang benar
+
+    #         # Setelah mendapatkan koordinat yang baru, perbarui nilai lat dan lon dalam rekaman
+    #         record.write({
+    #             'lat': new_latitude,
+    #             'lon': new_longitude,
+    #         })
+
+    #         # Tambahan: Jika Anda ingin melakukan tindakan lain setelah memperbarui koordinat, Anda dapat melakukannya di sini.
+
+    #     # Setelah selesai, Anda dapat memberikan pesan sukses atau mengambil tindakan lain yang sesuai.
+    #     return {
+    #         'type': 'ir.actions.client',
+    #         'tag': 'display_notification',
+    #         'params': {
+    #             'title': 'Coordinates Updated',
+    #             'message': 'Coordinates have been updated successfully.',
+    #             'type': 'success',
+    #         },
+    #     }
+    
     # validation date
     @api.constrains("start_time", "end_time")
     def check_date_and_duedate_valid(self):

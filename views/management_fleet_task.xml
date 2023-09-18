@@ -35,8 +35,10 @@
                         <field name="end_time" align="center" />
                         <!-- <field name="maps_link" widget="iframe" options="{'disable_link': True}" t-attf-src="record.google_maps_url"/> -->
                          <!-- Set invisible="1" to make lat and lon fields visible -->
-                        <field name="lat" invisible="1" />
-                        <field name="lon" invisible="1" />
+                         <button name="action_open_google_maps" string="Open Google Maps" class="oe_button_open_google_maps"/>
+                         <button name="action_update_coordinates" string="Update Coordinates" type="object" class="oe_highlight"/>
+                         <field name="lat" invisible="0" />
+                        <field name="lon" invisible="0" />
                     </group>
                 </sheet>
             </form>
@@ -95,6 +97,24 @@
             </graph>
         </field>
     </record>
+
+    <!-- <record id="action_open_google_maps_popup" model="ir.actions.client">
+        <field name="name">Open Google Maps Popup</field>
+        <field name="tag">open_google_maps_popup</field>
+        <field name="target">new</field>
+        <field name="javascript">[
+            "odoo.define('odoo.google_maps_popup', function (require) {",
+            "    'use strict';",
+            "    var web_client = require('web.client');",
+            "    var google_maps = require('google_maps');",
+            "    web_client.add_action('open_google_maps_popup', function () {",
+            "        var lat = web_client.session_info.action_params.lat;",
+            "        var lon = web_client.session_info.action_params.lon;",
+            "        google_maps.open_popup(lat, lon);",
+            "    });",
+            "});",
+        ]</field>
+    </record> -->
 
 
 </odoo>
